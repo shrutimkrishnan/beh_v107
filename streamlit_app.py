@@ -139,24 +139,25 @@ if selected_app:
     # }
 
     event_colors = {
-    "Home": "#d02f80",
-    "Search": "#d98c26",
-    "Review": "#abd629",
-    "Category": "#68d22d",
-    "Product": "#2bd4bd",
-    "Cart Journey": "#229cdd",
-    "Checkout":"#229ddd",
-    "Purchase": "#964db2",
-    "Videolive": "#9a7965",
-    "Videononlive": "#9a7345",
-    "Voucher": "#6e918b",
-    "History": "#edda12",
-    "Brandshop": "#64739b",
-    "Me":"#63d6d6",
-    "Non-Purchase": "#63d8d6",
-    "Lazmart":"#23d9d6",
-    "Account":"#62d8d6",
-    "Shopmain":"#52d8d6"
+        "Home": "#d02f80",
+        "Search": "#d98c26",
+        "Review": "#abd629",
+        "Category": "#68d22d",
+        "Product": "#2bd4bd",
+        "Cart Journey": "#229cdd",
+        "Checkout":"#229ddd",
+        "Purchase": "#964db2",
+        "Videolive": "#9a7965",
+        "Videononlive": "#9a7345",
+        "Voucher": "#6e918b",
+        "History": "#edda12",
+        "Brandshop": "#64739b",
+        "Me":"#63d6d6",
+        "Non-Purchase": "#63d8d6",
+        "Lazmart":"#23d9d6",
+        "Account":"#62d8d6",
+        "Shopmain":"#52d8d6",
+        "Shopeemall":"#93d8d6"
     }
 
     # Initialize lists for sources, targets, values, and colors
