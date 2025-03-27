@@ -8,13 +8,14 @@ st.set_page_config(layout="wide")
 # Read the CSV file from the public S3 URL
 data = pd.read_csv("https://behaviorally-testing.s3.amazonaws.com/sankey_relevant_session_v2.csv")
 
-st.title("Behaviorally Sankey beh_v105")
+st.title("Behaviorally Sankey beh_v107 updated")
 st.write("Sankey Diagram of Participant Journeys")
 
 # App selection dropdown
 app_names = {
     'com.ss.android.ugc.trill': 'TikTok',
-    'com.shopee.id': 'Shopee'
+    'com.shopee.ph': 'Shopee',
+    'com.lazada.android': 'Lazada'
 }
 selected_app = st.selectbox("Select App", options=list(app_names.keys()), format_func=lambda x: app_names[x])
 
