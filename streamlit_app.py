@@ -157,7 +157,8 @@ if selected_app:
         "Lazmart":"#23d9d6",
         "Account":"#62d8d6",
         "Shopmain":"#52d8d6",
-        "Shopeemall":"#93d8d6"
+        "Shopeemall":"#93d8d6",
+        "Lazlive":"#12d6d2"
     }
 
     # Initialize lists for sources, targets, values, and colors
