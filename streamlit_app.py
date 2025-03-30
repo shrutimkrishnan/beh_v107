@@ -160,7 +160,7 @@ if selected_app:
         "Shopeemall":"#93d8d6",
         "Lazlive":"#12d6d2"
     }
-
+ 
     # Initialize lists for sources, targets, values, and colors
     source = []
     target = []
