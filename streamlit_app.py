@@ -41,21 +41,21 @@ if selected_app:
     def journeys_until_first_purchase(pages):
         if not pages:
             return []
-
+    
         journeys = []
-        current_journey = [pages[0]]
-
-        for i in range(1, len(pages)):
-            if pages[i] == 'Purchase':
+        current_journey = []
+    
+        for i in range(len(pages)):
+            if not current_journey or pages[i] != current_journey[-1]:  # Avoid duplicates
                 current_journey.append(pages[i])
-                journeys.append(current_journey)
-                break  # Stop after the first purchase
-            elif pages[i] != pages[i - 1]:  # Compare with the previous element
-                current_journey.append(pages[i])
-
-        if 'Purchase' not in current_journey:
+    
+            if pages[i] == 'Purchase':  # Store journey if 'Purchase' is reached
+                journeys.append(current_journey[:])  # Store a copy of the journey
+                current_journey = []  # Reset journey for the next sequence
+    
+        if current_journey:  # Capture any remaining journey if no purchase occurred
             journeys.append(current_journey)
-
+    
         return journeys
 
     def get_sankey_format_data(df):
