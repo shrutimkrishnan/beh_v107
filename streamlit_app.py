@@ -140,7 +140,8 @@ if selected_app:
         "Shopmain":"#52d8d6",
         "Shopeemall":"#93d8d6",
         "Lazlive":"#12d6d2",
-        "Channels":"#5a7965"
+        "Channels":"#5a7965",
+        "Voucherhub":"#7bd4bd"
     }
  
     # Initialize lists for sources, targets, values, and colors
