@@ -118,26 +118,6 @@ if selected_app:
     # Filter the data based on the selected participant and journey type
     purchase_paths_df = get_journeys_until_first_purchase(data, selected_app, selected_participant)
 
-    # event_colors = {
-    #     "Home": "#d02f80",
-    #     "Search": "#d98c26",
-    #     "Review": "#abd629",
-    #     "Category": "#68d22d",
-    #     "Product": "#2bd4bd",
-    #     "Cart Journey": "#229cdd",
-    #     "Checkout":"#229ddd",
-    #     "Purchase": "#964db2",
-    #     "Videolive": "#9a7965",
-    #     "Videononlive": "#9a7345",
-    #     "Voucher": "#6e918b",
-    #     "History": "#edda12",
-    #     "Brandshop": "#64739b",
-    #     "Me":"#63d6d6",
-    #     "Non-Purchase": "#63d8d6",
-    #     "Shopeemall":"#23d8d6",
-    #     "Allproductsandservices":"#62d8d6",
-    # }
-
     event_colors = {
         "Home": "#d02f80",
         "Search": "#d98c26",
@@ -158,7 +138,8 @@ if selected_app:
         "Account":"#62d8d6",
         "Shopmain":"#52d8d6",
         "Shopeemall":"#93d8d6",
-        "Lazlive":"#12d6d2"
+        "Lazlive":"#12d6d2",
+        "Channels":"#5a7965"
     }
  
     # Initialize lists for sources, targets, values, and colors
