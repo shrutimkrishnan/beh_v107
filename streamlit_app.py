@@ -91,14 +91,15 @@ if selected_app:
             app_df = df[(df['apppackagename'] == app_package_name) & (df['participantId'] == participant_id)]
         
         app_df['pagetype'] = app_df['pagetype'].str.split('|')
-        app_df = app_df.explode('pagetype', ignore_index=True)
+        app_df = app_df.explode('pagetype',ignore_index=True)
         app_df = app_df[app_df['pagetype'] != 'Viewedrecommendedproduct']
-        app_df['pagetype'] = app_df['pagetype'].replace('Cart', 'Cart Journey')
+        app_df['pagetype']= app_df['pagetype'].replace('Cart','Cart Journey')
         app_df['eventtime'] = pd.to_datetime(app_df['eventtime'])
-        app_df.sort_values(by=['participantId', 'eventtime', 'session'], inplace=True)
-        aggregated_data = app_df.groupby(['participantId', 'session']).agg({'pagetype': list}).reset_index()
+        app_df.sort_values(by=['participantId','eventtime','session'], inplace=True)
+        aggregated_data = app_df.groupby(['participantId','session']).agg({'pagetype':list}).reset_index()
         aggregated_data['pagetype'] = aggregated_data['pagetype'].apply(journeys_until_first_purchase)
-        aggregated_data = aggregated_data.explode('pagetype')
+        aggregated_data = aggregated_data.explode('pagetype').reset_index(drop=True)
+        aggregated_data['session'] = aggregated_data['session'].astype(str) + '_' + aggregated_data.index.astype('str')
         aggregated_data = aggregated_data[~aggregated_data['pagetype'].isnull()]
         aggregated_data['pagetype'] = aggregated_data['pagetype'].apply(lambda x: x + ['Non-Purchase'] if x[-1] != 'Purchase' else x)
         aggregated_data['pagetype_length'] = aggregated_data['pagetype'].apply(len)
