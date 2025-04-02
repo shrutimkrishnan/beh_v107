@@ -7,6 +7,7 @@ st.set_page_config(layout="wide")
 
 # Read the CSV file from the public S3 URL
 data = pd.read_csv("https://behaviorally-testing.s3.amazonaws.com/behv107_sankey_relevant_session_v1.csv")
+data = data[data['image_data'] != 'Yes']
 
 st.title("Behaviorally Sankey beh_v107")
 st.write("Sankey Diagram of Participant Journeys")
