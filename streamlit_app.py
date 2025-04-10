@@ -155,7 +155,9 @@ if selected_app:
         "Shopeemall":"#93d8d6",
         "Lazlive":"#12d6d2",
         "Channels":"#5a7965",
-        "Voucherhub":"#7bd4bd"
+        "Voucherhub":"#7bd4bd",
+        "IMF": "#ff6f59", 
+        "PMD": "#457b9d"
     }
  
     # Initialize lists for sources, targets, values, and colors
@@ -179,7 +181,7 @@ if selected_app:
 
     # Iterate over each row to build the source-target pairs
     for index, row in purchase_paths_df.iterrows():
-        steps = row.dropna().tolist()[2:]  # Exclude PID and SID
+        steps = [row[col] for col in purchase_paths_df.columns if col.startswith("Step") and pd.notna(row[col])]
         for i in range(len(steps) - 1):
             current_step = steps[i]
             next_step = steps[i + 1]
