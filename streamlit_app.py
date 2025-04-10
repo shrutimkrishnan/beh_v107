@@ -121,6 +121,18 @@ if selected_app:
     # Filter the data based on the selected participant and journey type
     purchase_paths_df = get_journeys_until_first_purchase(data, selected_app, selected_participant)
 
+    # Set the categories
+    purchase_paths_df.loc[purchase_paths_df['participantId'].str.startswith(('1','2','3')),'Category'] = 'IMF'
+    purchase_paths_df.loc[purchase_paths_df['participantId'].str.startswith(('4','5','6')),'Category'] = 'PMD'
+
+    # Category selection dropdown
+    available_categories = purchase_paths_df['Category'].dropna().unique().tolist()
+    selected_category = st.selectbox("Select Category", options=['All'] + available_categories)
+
+    # Filter the DataFrame based on selected category
+    if selected_category != 'All':
+        purchase_paths_df = purchase_paths_df[purchase_paths_df['Category'] == selected_category]
+
     event_colors = {
         "Home": "#d02f80",
         "Search": "#d98c26",
