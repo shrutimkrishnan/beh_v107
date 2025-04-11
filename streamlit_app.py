@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
+from collections import defaultdict
 
 # Set page layout to wide
 st.set_page_config(layout="wide")
@@ -171,67 +172,102 @@ if selected_app:
     node_indices = {}
     node_colors = []
 
-    # Helper function to get the index of a node label
+    # Step-wise counts for %
+    # Count each node occurrence per step
+    step_counts = defaultdict(lambda: defaultdict(int))
+
+    for _, row in purchase_paths_df.iterrows():
+        steps = [row[col] for col in purchase_paths_df.columns if col.startswith("Step") and pd.notna(row[col])]
+        for i, val in enumerate(steps):
+            step_counts[i][val] += 1
+
+    # Only sum up non-"Purchase" counts per step for % calculations
+    step_totals = {
+        i: sum(count for label, count in label_counts.items() if label != "Purchase")
+        for i, label_counts in step_counts.items()
+    }
+
+
+    # Node and flow metadata
+    source, target, value, link_colors = [], [], [], []
+    node_labels, node_indices, node_colors = [], {}, []
+
     def get_node_index(label):
         if label not in node_indices:
+            if "_" in label:
+                step_part, page = label.split("_", 1)
+                if step_part.startswith("Step") and step_part[4:].isdigit():
+                    step_idx = int(step_part[4:])
+                    count = step_counts[step_idx][page]
+                    total = step_totals[step_idx]
+                    pct = ""
+                    if label != "Purchase" and total > 0:
+                        pct = f" ({round((count / total) * 100):.0f}%)"
+                    display_label = f"{page}{pct}"
+                else:
+                    display_label = label
+            else:
+                display_label = label
             node_indices[label] = len(node_labels)
-            node_labels.append(label)
-            node_colors.append(event_colors[label.split("_")[1]] if "_" in label else event_colors.get(label, "grey"))
+            node_labels.append(display_label)
+            key = label.split("_")[1] if "_" in label else label
+            node_colors.append(event_colors.get(key, "grey"))
         return node_indices[label]
 
-    # Iterate over each row to build the source-target pairs
-    for index, row in purchase_paths_df.iterrows():
+
+    # Build source-target-value lists
+    for _, row in purchase_paths_df.iterrows():
         steps = [row[col] for col in purchase_paths_df.columns if col.startswith("Step") and pd.notna(row[col])]
         for i in range(len(steps) - 1):
-            current_step = steps[i]
-            next_step = steps[i + 1]
+            src = get_node_index(f"Step{i}_{steps[i]}")
+            tgt = get_node_index(f"Step{i+1}_{steps[i+1]}" if steps[i+1] not in ['Purchase', 'Non-Purchase'] else steps[i+1])
+            source.append(src)
+            target.append(tgt)
+            value.append(1)
+            link_colors.append("rgba(200,200,200,0.3)")
 
-            # Ensure all non-purchase paths end at a single node "Non-Purchase"
-            if next_step == 'Non-Purchase':
-                next_step_label = 'Non-Purchase'
-            elif next_step == 'Purchase':
-                next_step_label = 'Purchase'
-            else:
-                next_step_label = f"Step{i + 1}_{next_step}"
+    # # Build a dataframe to show all node counts and percentages per step
+    # rows = []
+    # for step_idx, label_counts in step_counts.items():
+    #     total = sum(label_counts.values())
+    #     for label, count in sorted(label_counts.items(), key=lambda x: -x[1]):
+    #         percent = round(count / total * 100) if total else 0
+    #         rows.append({
+    #             "Step": f"Step {step_idx}",
+    #             "Node": label,
+    #             "Count": count,
+    #             "Percent": f"{percent}%",
+    #         })
+    #     rows.append({
+    #         "Step": f"Step {step_idx}",
+    #         "Node": "TOTAL",
+    #         "Count": total,
+    #         "Percent": "100%"
+    #     })
 
-            source_index = get_node_index(f"Step{i}_{current_step}")
-            target_index = get_node_index(next_step_label)
+    # step_df = pd.DataFrame(rows)
+            
+    # Sankey figure
+    fig = go.Figure(go.Sankey(
+        node=dict(
+            pad=20,
+            thickness=20,
+            line=dict(color="rgba(0,0,0,0)", width=0),
+            label=node_labels,
+            color=node_colors
+        ),
+        link=dict(source=source, target=target, value=value, color=link_colors)
+    ))
 
-            source.append(source_index)
-            target.append(target_index)
-            value.append(1)  # Each transition has a value of 1
-            link_colors.append("lightgrey")  # Transition color
-
-# Create the Sankey diagram without the 'font' parameter in node
-fig = go.Figure(go.Sankey(
-    node=dict(
-        pad=20,  # Increased padding for clearer separation
-        thickness=20,
-        line=dict(color="black", width=0.5),  # Optional node border
-        label=[label.split("_")[1] if "_" in label else label for label in node_labels],
-        color=node_colors  # Background colors for nodes
-    ),
-    link=dict(
-        source=source,
-        target=target,
-        value=value,
-        color=link_colors
+    fig.update_layout(
+        title_text="E-commerce Purchase Journeys (First 5 steps, Last 5 steps only)",
+        template="none",
+        font_family="Helvetica",
+        font_size=20,
+        font_color="black",
+        margin=dict(l=50, r=50, t=100, b=100),
+        width=1600,
+        height=1200
     )
-))
 
-# Update layout to control font settings globally and set the width of the figure
-fig.update_layout(
-    title_text="E-commerce Purchase Journeys (First 5 steps, Last 5 steps only)",
-    # font=dict(
-    #     size=14,  # Adjusted for better readability across the chart
-    #     color="black",  # Set font color to black for overall text contrast
-    #     family="Arial"  # Use a readable font family
-    # ),
-    font_size=14,
-    font_color ="red",
-    width=1600,  # Adjust width for a better display
-    height=900  # Adjust height for a better display
-)
-
-# Display the Sankey diagram in Streamlit with full width
-st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True)
