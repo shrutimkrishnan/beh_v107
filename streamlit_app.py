@@ -242,7 +242,7 @@ if selected_app:
         title_text="E-commerce Purchase Journeys (First 5 steps, Last 5 steps only)",
         template="none",
         font_family="Helvetica",
-        font_size=20,
+        font_size=12,
         font_color="black",
         margin=dict(l=50, r=50, t=100, b=100),
         width=1600,
