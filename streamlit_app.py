@@ -225,27 +225,6 @@ if selected_app:
             target.append(tgt)
             value.append(1)
             link_colors.append("rgba(200,200,200,0.3)")
-
-    # # Build a dataframe to show all node counts and percentages per step
-    # rows = []
-    # for step_idx, label_counts in step_counts.items():
-    #     total = sum(label_counts.values())
-    #     for label, count in sorted(label_counts.items(), key=lambda x: -x[1]):
-    #         percent = round(count / total * 100) if total else 0
-    #         rows.append({
-    #             "Step": f"Step {step_idx}",
-    #             "Node": label,
-    #             "Count": count,
-    #             "Percent": f"{percent}%",
-    #         })
-    #     rows.append({
-    #         "Step": f"Step {step_idx}",
-    #         "Node": "TOTAL",
-    #         "Count": total,
-    #         "Percent": "100%"
-    #     })
-
-    # step_df = pd.DataFrame(rows)
             
     # Sankey figure
     fig = go.Figure(go.Sankey(
