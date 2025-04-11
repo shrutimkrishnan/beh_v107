@@ -183,10 +183,9 @@ if selected_app:
 
     # Only sum up non-"Purchase" counts per step for % calculations
     step_totals = {
-        i: sum(count for label, count in label_counts.items() if label != "Purchase")
+        i: sum(count for label, count in label_counts.items() if label not in ["Purchase", "Non-Purchase"])
         for i, label_counts in step_counts.items()
     }
-
 
     # Node and flow metadata
     source, target, value, link_colors = [], [], [], []
@@ -201,7 +200,7 @@ if selected_app:
                     count = step_counts[step_idx][page]
                     total = step_totals[step_idx]
                     pct = ""
-                    if label != "Purchase" and total > 0:
+                    if page not in ["Purchase", "Non-Purchase"] and total > 0:
                         pct = f" ({round((count / total) * 100):.0f}%)"
                     display_label = f"{page}{pct}"
                 else:
